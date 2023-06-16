@@ -4,6 +4,7 @@ import { StatusComponent } from '../../components/StatusComponent';
 import { Card } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
+import { useProvider } from '../../context/provider';
 
 type Cards = {
   uuid: string;
@@ -13,16 +14,17 @@ type Cards = {
 
 export const ServerMenu = () => {
   const [activeStatus, setActiveStatus] = useState<boolean>(false);
-  const [ip, setIp] = useState('localhost:5633');
   const [text, setText] = useState<string>('');
   const [informations, setInformations] = useState<string>('');
   const [socket, setSocket] = useState<Socket<any>>();
   const [cards, setCards] = useState<Array<Cards>>([]);
   const [cardsObject, setObjectCards] = useState<Cards>();
   const preRef = useRef<any>(null);
-  document.title = 'Server - MenuFooding';
 
+  const { ipAddress, room } = useProvider();
   const navigation = useNavigate();
+
+  document.title = 'Server - MenuFooding';
 
   const updateItem = (card: Cards) => {
     setCards(prevItems => {
@@ -70,14 +72,15 @@ export const ServerMenu = () => {
     }
   }, [socket])
 
+  useEffect(() => {
+    handleStart();
+  }, []);
+
   const handleStart = () => {
-    try {
-      const socket = io(`http://localhost:5633`);
+      const socket = io(`http://${ipAddress}`);
       setSocket(socket);
-    }
-    catch (e) {
-      console.log("deu erro", e)
-    }
+      socket.emit('joinCreated', room);
+      socket.emit('rooms', []);
   }
 
   const handleDisconnected = () => {
@@ -105,65 +108,65 @@ export const ServerMenu = () => {
   }
 
   return (
-    <Container>
-      <AsideLeftMenu>
-        <h1>Cardápio</h1>
-        <textarea
-          value={text}
-          onChange={e => setText(e.target.value)}
-          readOnly={false}
-          placeholder='Informe o cardápio'
-        />
-        <textarea
-          value={informations}
-          onChange={e => setInformations(e.target.value)}
-          readOnly={false}
-          placeholder='Informações'
-        />
-        <Button onClick={handleSendMenu}>Enviar cardápio</Button>
-      </AsideLeftMenu>
+          <Container>
+            <AsideLeftMenu>
+              <h1>Cardápio</h1>
+              <textarea
+                value={text}
+                onChange={e => setText(e.target.value)}
+                readOnly={false}
+                placeholder='Informe o cardápio'
+              />
+              <textarea
+                value={informations}
+                onChange={e => setInformations(e.target.value)}
+                readOnly={false}
+                placeholder='Informações'
+              />
+              <Button onClick={handleSendMenu}>Enviar cardápio</Button>
+            </AsideLeftMenu>
 
-      <CardContainer>
-        {
-          cards.map((vl, idx) => (
-            <Card key={vl.uuid} user={vl.user} text={vl.text} number={idx + 1} onClick={() => handleRemove(vl.uuid)} />
-          ))
-        }
-      </CardContainer>
+            <CardContainer>
+              {
+                cards.map((vl, idx) => (
+                  <Card key={vl.uuid} user={vl.user} text={vl.text} number={idx + 1} onClick={() => handleRemove(vl.uuid)} />
+                ))
+              }
+            </CardContainer>
 
-      <AsideRightMenu>
-        <h1>Pedidos</h1>
-        <pre style={{
-          textAlign: 'left',
-          background: '#FFF',
-          height: '75%',
-          overflowY: 'auto'
-        }}
-        ref={preRef}
-        >
-          {cards.map((vl, idx) => (
-            <div key={idx}>
-              <h3>Nome: {vl.user}</h3>
-              <strong>Pedido:</strong>
-              <p>{vl.text}</p>
-              <p> -------------------- </p>
-              <br/>
-            </div>
-          ))}
-        </pre>
-        <Button onClick={() => handleClipboard()}>Copiar</Button>
-      </AsideRightMenu>
+            <AsideRightMenu>
+              <h1>Pedidos</h1>
+              <pre style={{
+                textAlign: 'left',
+                background: '#FFF',
+                height: '75%',
+                overflowY: 'auto'
+              }}
+                ref={preRef}
+              >
+                {cards.map((vl, idx) => (
+                  <div key={idx}>
+                    <h3>Nome: {vl.user}</h3>
+                    <strong>Pedido:</strong>
+                    <p>{vl.text}</p>
+                    <p> -------------------- </p>
+                    <br />
+                  </div>
+                ))}
+              </pre>
+              <Button onClick={() => handleClipboard()}>Copiar</Button>
+            </AsideRightMenu>
 
-      <Footer>
-        <StatusComponent active={activeStatus} />
-        <InputIP value={ip} />
-        {
-          !activeStatus ? <Button onClick={handleStart}>Start</Button> : <Button onClick={handleDisconnected}>Disconnect</Button>
-        }
-        <Button
-          onClick={toBack}
-        >Voltar</Button>
-      </Footer>
-    </Container>
+            <Footer>
+              <StatusComponent active={activeStatus} />
+              <InputIP value={ipAddress} />
+              {
+                !activeStatus ? <Button onClick={handleStart}>Start</Button> : <Button onClick={handleDisconnected}>Disconnect</Button>
+              }
+              <Button
+                onClick={toBack}
+              >Voltar</Button>
+            </Footer>
+          </Container>
   )
 }

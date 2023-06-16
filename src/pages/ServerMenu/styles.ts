@@ -9,11 +9,17 @@ export const Container = styled.div`
 
 export const AsideLeftMenu = styled.div`
   background-color: #070D21;
-  width: 20%;
+  width: 30%;
   height: 100%;
   left: 0px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+
+  padding-left: 20px;
+  padding-right: 20px;
+
+  align-items: center;
+  justify-content: center;
+
+  overflow-y: auto;
 
   text-align: center;
 
@@ -35,11 +41,14 @@ export const AsideLeftMenu = styled.div`
 
 export const AsideRightMenu = styled.div`
   background-color: #070D21;
-  width: 20%;
+  width: 30%;
   height: 100%;
   right: 0px;
   padding-left: 1rem;
   padding-right: 1rem;
+
+  padding-left: 20px;
+  padding-right: 20px;
 
   text-align: center;
 
@@ -81,16 +90,17 @@ export const InputIP = styled.input`
 `;
 
 export const Button = styled.button`
-  margin: 10px;
   padding: 5px;
   padding-left: 2rem;
   padding-right: 2rem;
+  margin-left: 5px;
   border-radius: 10px;
   border: none;
   background-color: #258803;
   color: white;
   font-weight: bold;
   font-size: 12pt;
+
 
   &:hover {
     cursor: pointer;

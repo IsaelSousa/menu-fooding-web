@@ -15,6 +15,8 @@ export const AsideMenu = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
 
+  overflow-x: auto;
+
   text-align: center;
 
   h1 {
@@ -72,6 +74,17 @@ export const Button = styled.button`
 `;
 
 export const CardContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 40px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 998;
+  overflow-y: auto;
+`;
+
+export const MenuContainer = styled.div`
   width: 100%;
   height: calc(100% - 40px);
   display: flex;
