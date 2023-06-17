@@ -8,6 +8,7 @@ import { Socket } from 'socket.io-client';
 import { IpRegex } from '../../utils/IpRegex';
 import { v4 as uuidv4 } from 'uuid';
 import { Menu } from '../../components/Menu';
+import { toast } from 'react-toastify';
 
 export const ClientMenu = () => {
   const [menu, setMenu] = useState<string>('');
@@ -30,11 +31,13 @@ export const ClientMenu = () => {
       localStorage.setItem('ipAddressClient', ipAddress);
       setSocket(socket);
       socket.emit('rooms');
+      toast.success('Servidor iniciado.');
     }
   }
 
   const disconnectServer = () => {
     socket?.disconnect();
+    toast.success('Desconectado.');
   }
 
   const navigation = useNavigate();
@@ -45,6 +48,7 @@ export const ClientMenu = () => {
 
   const handleSend = () => {
     socket?.emit('menu-user', [user, text, uuidSaved]);
+    toast.success('Pedido enviado.');
   }
 
   const handleEmitMsg = (nameMenu: string) => {

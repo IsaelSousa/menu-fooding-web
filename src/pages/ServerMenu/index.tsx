@@ -5,6 +5,7 @@ import { Card } from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 import { Socket, io } from 'socket.io-client';
 import { useProvider } from '../../context/provider';
+import { toast } from 'react-toastify';
 
 type Cards = {
   uuid: string;
@@ -81,22 +82,26 @@ export const ServerMenu = () => {
       setSocket(socket);
       socket.emit('joinCreated', room);
       socket.emit('rooms', []);
+      toast.success('Servidor iniciado.');
   }
 
   const handleDisconnected = () => {
     if (socket) {
       socket.disconnect();
+      toast.success('Desconectado.');
     }
   }
 
   const handleClipboard = () => {
     if (preRef.current) {
       navigator.clipboard.writeText(preRef.current.innerText);
+      toast.success('Pedidos copiados.');
     }
   }
 
   const handleSendMenu = () => {
-    socket?.emit('menu', [text, informations])
+    socket?.emit('menu', [text, informations]);
+    toast.success('Cardápio enviado aos usuários.');
   }
 
   const toBack = () => {
@@ -105,6 +110,7 @@ export const ServerMenu = () => {
 
   const handleRemove = (uuid: string) => {
     setCards(cards.filter(item => item.uuid != uuid));
+    toast.success('Pedido removido.');
   }
 
   return (
