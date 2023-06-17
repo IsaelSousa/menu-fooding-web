@@ -20,7 +20,7 @@ export const SelectMenu = () => {
   }
 
   const handleServer = () => {
-    navigation('/server');
+    navigation('/createroom');
   }
 
   return (
